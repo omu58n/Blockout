@@ -15,6 +15,7 @@ class Blockout(tk.Frame):
         self.master.bind('<Motion>', self.motion)
         self.master.title("Blockout")
         self.is_gameover = False
+        self.is_gameclear = False
         self.point = 0
         self.cv = tk.Canvas(self, width=600, height=400)
         self.cv.pack()
@@ -55,6 +56,9 @@ class Blockout(tk.Frame):
         if self.is_gameover:
             self.message_var.set("--GAMEOVER-- point: " + str(self.point))
             return
+        if self.is_gameclear:
+            self.message_var.set("--GAMECLEAR-- point: " + str(self.point))
+            return
         bx = ball["x"] + ball["dirx"]
         by = ball["y"] + ball["diry"]
         if bx < 0 or bx > 600:
@@ -82,12 +86,11 @@ class Blockout(tk.Frame):
             if random.randint(0, 1) == 0: ball["dirx"] *= -1
             ball["diry"] *= -1
             self.point += 10
-            if len(blocks) == 0:
-                self.message_var.set("--GAMECLEAR-- point: " + str(self.point))
-                return
             self.message_var.set("point: "+str(self.point))
         if by > 400:
             self.is_gameover = True
+        if len(blocks) == 0:
+            self.is_gameclear = True
         if 0 <= bx <= 600: 
             ball["x"] = bx
         if 0 <= by <= 400: 
